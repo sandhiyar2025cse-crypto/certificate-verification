@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Blockchain Certificate Platform</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #0f2d5c, #174a8b);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            width: 410px;
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+        }
+
+        .logo {
+            text-align: center;
+            color: #173b68;
+            font-size: 23px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .security {
+            text-align: center;
+            background: #eef5fc;
+            color: #2563a8;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            margin-top: 17px;
+            color: #374151;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            height: 43px;
+            padding: 10px 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563a8;
+            box-shadow: 0 0 0 3px rgba(37,99,168,0.12);
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            height: 44px;
+            border: none;
+            border-radius: 5px;
+            background: #2563a8;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4f89;
+        }
+
+        .message {
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+            margin-top: 25px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <div class="logo">
+        Blockchain Certificate Platform
+    </div>
+
+    <div class="subtitle">
+        Secure Certificate Management System
+    </div>
+
+    <div class="security">
+        🔐 Authorized Administrator Login
+    </div>
+
+    <div th:if="${param.error}"
+         class="message error">
+        Invalid username or password.
+    </div>
+
+    <div th:if="${param.logout}"
+         class="message success">
+        You have been logged out successfully.
+    </div>
+
+    <form th:action="@{/login}" method="post">
+
+        <label>
+            Username
+        </label>
+
+        <input type="text"
+               name="username"
+               placeholder="Enter username"
+               required>
+
+        <label>
+            Password
+        </label>
+
+        <input type="password"
+               name="password"
+               placeholder="Enter password"
+               required>
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+    <div class="footer">
+        Blockchain-backed digital certificate verification
+    </div>
+
+</div>
+
+</body>
+
+</html>

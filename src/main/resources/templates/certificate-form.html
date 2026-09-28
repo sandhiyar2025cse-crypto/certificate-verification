@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${certificate.id == null ? 'Issue Certificate' : 'Update Certificate'}">
+        Certificate Form
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        /* ================= TOP NAVBAR ================= */
+
+        .topbar {
+            height: 65px;
+            background: linear-gradient(135deg, #0f2d5c, #174a8b);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .admin-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .logout {
+            color: white;
+            text-decoration: none;
+            padding: 8px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+        }
+
+        .logout:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            top: 65px;
+            left: 0;
+            width: 235px;
+            height: calc(100vh - 65px);
+            background: #102a4c;
+            padding-top: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            color: #9fb5d1;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 0 22px 10px;
+            letter-spacing: 0.7px;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu li {
+            margin: 3px 10px;
+        }
+
+        .menu a {
+            display: block;
+            color: #dbe7f5;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #173d69;
+        }
+
+        .menu a.active {
+            background: #2563a8;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* ================= MAIN CONTENT ================= */
+
+        .main {
+            margin-left: 235px;
+            padding: 35px;
+            min-height: calc(100vh - 65px);
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 7px;
+            font-size: 27px;
+            color: #173b68;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* ================= FORM CARD ================= */
+
+        .form-card {
+            max-width: 850px;
+            background: white;
+            border-radius: 8px;
+            padding: 32px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .form-title {
+            font-size: 19px;
+            font-weight: bold;
+            color: #173b68;
+            padding-bottom: 16px;
+            margin-bottom: 22px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        input {
+            width: 100%;
+            height: 43px;
+            padding: 10px 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #1f2937;
+            background: white;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563a8;
+            box-shadow: 0 0 0 3px rgba(37, 99, 168, 0.12);
+        }
+
+        input::placeholder {
+            color: #9ca3af;
+        }
+
+        input[readonly] {
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 10px;
+            padding-top: 22px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 11px 22px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-cancel {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-cancel:hover {
+            background: #d1d5db;
+        }
+
+        .btn-primary {
+            background: #2563a8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4f89;
+        }
+
+        /* ================= INFO BOX ================= */
+
+        .info-box {
+            max-width: 850px;
+            margin-top: 20px;
+            padding: 15px 18px;
+            background: #eef5fc;
+            border-left: 4px solid #2563a8;
+            border-radius: 4px;
+            color: #36516f;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-left: 190px;
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .topbar {
+                padding: 0 15px;
+            }
+
+            .logo {
+                font-size: 17px;
+            }
+
+            .admin-area {
+                display: none;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+                width: 100%;
+                height: auto;
+                padding-bottom: 10px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .form-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= TOP NAVBAR ================= -->
+
+    <div class="topbar">
+
+        <div class="logo">
+            Blockchain Certificate Platform
+        </div>
+
+        <div class="admin-area">
+            <span>Admin</span>
+
+            <a href="/logout" class="logout">
+                Logout
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-title">
+            Main Menu
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="/dashboard">
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="/certificates/new"
+                   th:classappend="${certificate.id == null} ? ' active' : ''">
+                    Issue Certificate
+                </a>
+            </li>
+
+            <li>
+                <a href="/certificates">
+                    View Certificates
+                </a>
+            </li>
+
+            <li>
+                <a href="/certificates">
+                    Revoke Certificate
+                </a>
+            </li>
+
+            <li>
+                <a href="#"
+                   th:classappend="${certificate.id != null} ? ' active' : ''">
+                    Update Certificate
+                </a>
+            </li>
+
+            <li>
+                <a href="/verify">
+                    Verify Certificate
+                </a>
+            </li>
+
+            <li>
+                <a href="/blockchain">
+                    Blockchain Records
+                </a>
+            </li>
+
+            <li>
+                <a href="/verify">
+                    Verification Logs
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main">
+
+        <div class="page-header">
+
+            <h1 th:text="${certificate.id == null ? 'Issue New Certificate' : 'Update Certificate'}">
+                Issue New Certificate
+            </h1>
+
+            <p th:text="${certificate.id == null
+                ? 'Create and securely register a new digital certificate.'
+                : 'Update the certificate information and create a new blockchain record.'}">
+                Create and securely register a new digital certificate.
+            </p>
+
+        </div>
+
+
+        <!-- ================= FORM CARD ================= -->
+
+        <div class="form-card">
+
+            <div class="form-title">
+                Certificate Information
+            </div>
+
+
+            <form th:action="${certificate.id == null}
+                        ? @{/certificates/save}
+                        : @{/certificates/update}"
+                  th:object="${certificate}"
+                  method="post">
+
+
+                <!-- Hidden Database ID -->
+
+                <input type="hidden"
+                       th:field="*{id}">
+
+
+                <div class="form-row">
+
+
+                    <!-- Certificate ID -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Certificate ID
+                            <span class="required">*</span>
+                        </label>
+
+                        <input type="text"
+                               th:field="*{certificateId}"
+                               placeholder="Example: CERT-2026-001"
+                               required
+                               th:readonly="${certificate.id != null}">
+
+                    </div>
+
+
+                    <!-- Issue Date -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Issue Date
+                            <span class="required">*</span>
+                        </label>
+
+                        <input type="date"
+                               th:field="*{issueDate}"
+                               required>
+
+                    </div>
+
+
+                    <!-- Student Name -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Student Name
+                            <span class="required">*</span>
+                        </label>
+
+                        <input type="text"
+                               th:field="*{studentName}"
+                               placeholder="Enter student's full name"
+                               required>
+
+                    </div>
+
+
+                    <!-- Course Name -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Course Name
+                            <span class="required">*</span>
+                        </label>
+
+                        <input type="text"
+                               th:field="*{courseName}"
+                               placeholder="Enter course name"
+                               required>
+
+                    </div>
+
+
+                    <!-- Institution -->
+
+                    <div class="form-group full">
+
+                        <label>
+                            Institution
+                            <span class="required">*</span>
+                        </label>
+
+                        <input type="text"
+                               th:field="*{institution}"
+                               placeholder="Enter institution name"
+                               required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= BUTTONS ================= -->
+
+                <div class="form-actions">
+
+                    <a href="/certificates"
+                       class="btn btn-cancel">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-primary"
+                            th:text="${certificate.id == null
+                                ? 'Issue Certificate'
+                                : 'Update Certificate'}">
+                        Issue Certificate
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- ================= INFO BOX ================= -->
+
+        <div class="info-box"
+             th:if="${certificate.id == null}">
+
+            <strong>Security:</strong>
+            After issuing the certificate, the system generates a
+            SHA-256 hash and stores the certificate hash in the
+            blockchain ledger for future verification.
+
+        </div>
+
+        <div class="info-box"
+             th:if="${certificate.id != null}">
+
+            <strong>Blockchain:</strong>
+            Updating certificate information will generate a new
+            SHA-256 hash and create a new blockchain record linked
+            to the previous block.
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+target/
+.classpath
+.project
+.settings/
+.vscode/
+*.log
+
+# IDE
+.idea/
+
+# Environment / secrets
+.env
+application-local.properties

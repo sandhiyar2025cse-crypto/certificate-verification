@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Blockchain Records</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        /* TOPBAR */
+
+        .topbar {
+            height: 65px;
+            background: linear-gradient(135deg, #0f2d5c, #174a8b);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .admin-area {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .logout {
+            color: white;
+            text-decoration: none;
+            padding: 8px 14px;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 5px;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            top: 65px;
+            left: 0;
+            width: 235px;
+            height: calc(100vh - 65px);
+            background: #102a4c;
+            padding-top: 20px;
+        }
+
+        .sidebar-title {
+            color: #9fb5d1;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 0 22px 10px;
+            letter-spacing: 0.7px;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu li {
+            margin: 3px 10px;
+        }
+
+        .menu a {
+            display: block;
+            color: #dbe7f5;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .menu a:hover {
+            background: #173d69;
+        }
+
+        .menu a.active {
+            background: #2563a8;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 235px;
+            padding: 35px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 7px;
+            color: #173b68;
+            font-size: 27px;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* BLOCK */
+
+        .block {
+            background: white;
+            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        }
+
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 17px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .block-number {
+            font-size: 19px;
+            font-weight: bold;
+            color: #2563a8;
+        }
+
+        .timestamp {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #edf0f3;
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            width: 180px;
+            font-weight: bold;
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        .value {
+            flex: 1;
+            word-break: break-all;
+            font-size: 13px;
+        }
+
+        .hash {
+            font-family: monospace;
+            font-size: 12px;
+            color: #374151;
+        }
+
+        .empty {
+            background: white;
+            padding: 50px;
+            text-align: center;
+            border-radius: 8px;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+        }
+
+        @media(max-width:800px) {
+
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-left: 190px;
+                padding: 25px;
+            }
+
+            .block-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+
+<div class="topbar">
+
+    <div class="logo">
+        Blockchain Certificate Platform
+    </div>
+
+    <div class="admin-area">
+
+        <span>Admin</span>
+
+        <a href="/logout" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-title">
+        Main Menu
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="/dashboard">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="/certificates/new">
+                Issue Certificate
+            </a>
+        </li>
+
+        <li>
+            <a href="/certificates">
+                View Certificates
+            </a>
+        </li>
+
+        <li>
+            <a href="/certificates">
+                Revoke Certificate
+            </a>
+        </li>
+
+        <li>
+            <a href="/certificates">
+                Update Certificate
+            </a>
+        </li>
+
+        <li>
+            <a href="/verify">
+                Verify Certificate
+            </a>
+        </li>
+
+        <li>
+            <a href="/blockchain" class="active">
+                Blockchain Records
+            </a>
+        </li>
+
+        <li>
+            <a href="/verify">
+                Verification Logs
+            </a>
+        </li>
+
+    </ul>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+    <div class="page-header">
+
+        <h1>
+            Blockchain Records
+        </h1>
+
+        <p>
+            Tamper-evident certificate records stored in the private blockchain ledger.
+        </p>
+
+    </div>
+
+
+    <!-- EMPTY -->
+
+    <div th:if="${#lists.isEmpty(blocks)}"
+         class="empty">
+
+        No blockchain records found.
+
+    </div>
+
+
+    <!-- BLOCKS -->
+
+    <div th:each="block : ${blocks}"
+         class="block">
+
+        <div class="block-header">
+
+            <div class="block-number">
+                Block #
+                <span th:text="${block.blockIndex}">
+                </span>
+            </div>
+
+            <div class="timestamp"
+                 th:text="${block.timestamp}">
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="label">
+                Certificate ID
+            </div>
+
+            <div class="value"
+                 th:text="${block.certificateId}">
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="label">
+                Certificate Hash
+            </div>
+
+            <div class="value hash"
+                 th:text="${block.certificateHash}">
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="label">
+                Previous Hash
+            </div>
+
+            <div class="value hash"
+                 th:text="${block.previousHash}">
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="label">
+                Block Hash
+            </div>
+
+            <div class="value hash"
+                 th:text="${block.blockHash}">
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+
+</html>
